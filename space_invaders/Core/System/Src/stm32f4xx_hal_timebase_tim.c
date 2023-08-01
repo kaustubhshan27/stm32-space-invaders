@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file    stm32f4xx_hal_timebase_TIM.c
@@ -16,19 +15,12 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
 #include "stm32f4xx_hal.h"
 #include "stm32f4xx_hal_tim.h"
 
-/* Private typedef -----------------------------------------------------------*/
-/* Private define ------------------------------------------------------------*/
-/* Private macro -------------------------------------------------------------*/
-/* Private variables ---------------------------------------------------------*/
 TIM_HandleTypeDef        htim5;
-/* Private function prototypes -----------------------------------------------*/
-/* Private functions ---------------------------------------------------------*/
 
 /**
   * @brief  This function configures the TIM5 as a time base source.
@@ -109,5 +101,3 @@ void HAL_ResumeTick(void)
   /* Enable TIM5 Update interrupt */
   __HAL_TIM_ENABLE_IT(&htim5, TIM_IT_UPDATE);
 }
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
