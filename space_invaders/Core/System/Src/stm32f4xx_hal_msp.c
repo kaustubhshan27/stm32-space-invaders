@@ -1,4 +1,3 @@
-/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
   * @file         stm32f4xx_hal_msp.c
@@ -17,50 +16,16 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
 
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
-/* USER CODE BEGIN Includes */
 
-/* USER CODE END Includes */
-extern DMA_HandleTypeDef hdma_adc1;
+DMA_HandleTypeDef hdma_adc1;
+DMA_HandleTypeDef hdma_spi1_tx;
 
-extern DMA_HandleTypeDef hdma_spi1_tx;
+extern TIM_HandleTypeDef htim2;
+extern ADC_HandleTypeDef hadc1;
 
-/* Private typedef -----------------------------------------------------------*/
-/* USER CODE BEGIN TD */
-
-/* USER CODE END TD */
-
-/* Private define ------------------------------------------------------------*/
-/* USER CODE BEGIN Define */
-
-/* USER CODE END Define */
-
-/* Private macro -------------------------------------------------------------*/
-/* USER CODE BEGIN Macro */
-
-/* USER CODE END Macro */
-
-/* Private variables ---------------------------------------------------------*/
-/* USER CODE BEGIN PV */
-
-/* USER CODE END PV */
-
-/* Private function prototypes -----------------------------------------------*/
-/* USER CODE BEGIN PFP */
-
-/* USER CODE END PFP */
-
-/* External functions --------------------------------------------------------*/
-/* USER CODE BEGIN ExternalFunctions */
-
-/* USER CODE END ExternalFunctions */
-
-/* USER CODE BEGIN 0 */
-
-/* USER CODE END 0 */
 /**
   * Initializes the Global MSP.
   */
@@ -296,9 +261,3 @@ void HAL_TIM_Base_MspDeInit(TIM_HandleTypeDef* htim_base)
   }
 
 }
-
-/* USER CODE BEGIN 1 */
-
-/* USER CODE END 1 */
-
-/************************ (C) COPYRIGHT STMicroelectronics *****END OF FILE****/
