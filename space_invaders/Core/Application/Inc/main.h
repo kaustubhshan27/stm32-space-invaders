@@ -37,6 +37,11 @@ extern "C" {
 #include "timer.h"
 #include "nokia5110.h"
 #include "error_handler.h"
+#include "FreeRTOS.h"
+#include "task.h"
+
+/* Macros ------------------------------------------------------------------*/
+#define TASK_STACK_SIZE		500
 
 #ifdef __cplusplus
 }

@@ -8,43 +8,69 @@
 #include "stm32f4xx_hal.h"
 #include "error_handler.h"
 
-/**
-  * @brief GPIO Initialization Function
-  * @param None
-  * @retval None
-  */
-void MX_GPIO_Init(void)
+/* debounce limit count */
+#define DEBOUNCE_COUNT	5
+
+typedef struct user_button_status
 {
-  GPIO_InitTypeDef GPIO_InitStruct = {0};
+	uint8_t current_state;	// =0 if pressed, 1 if not pressed
+	uint32_t count;
+	uint8_t button_state;	// final state of button
+} user_button_status_t;
 
-  /* GPIO Ports Clock Enable */
-  __HAL_RCC_GPIOH_CLK_ENABLE();
-  __HAL_RCC_GPIOC_CLK_ENABLE();
-  __HAL_RCC_GPIOA_CLK_ENABLE();
+static user_button_status_t missile_button_stats;
 
-  /*Configure GPIO pin Output Level */
-  HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8|GPIO_PIN_9, GPIO_PIN_RESET);
+/**
+ * @brief GPIO Initialization Function
+ * @param None
+ * @retval None
+ */
+void MX_GPIO_Init(void) {
+	GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 
-  /*Configure GPIO pin : PC4 */
-  GPIO_InitStruct.Pin = GPIO_PIN_4;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
-  GPIO_InitStruct.Pull = GPIO_PULLUP;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+	/* GPIO Ports Clock Enable */
+	__HAL_RCC_GPIOH_CLK_ENABLE();
+	__HAL_RCC_GPIOC_CLK_ENABLE();
+	__HAL_RCC_GPIOA_CLK_ENABLE();
 
-  /*Configure GPIO pins : PA8 PA9 */
-  GPIO_InitStruct.Pin = GPIO_PIN_8|GPIO_PIN_9;
-  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
-  GPIO_InitStruct.Pull = GPIO_NOPULL;
-  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+	/*Configure GPIO pin Output Level */
+	HAL_GPIO_WritePin(GPIOA, GPIO_PIN_8 | GPIO_PIN_9, GPIO_PIN_RESET);
 
-  /* EXTI interrupt init*/
-  HAL_NVIC_SetPriority(EXTI4_IRQn, 0, 0);
-  HAL_NVIC_EnableIRQ(EXTI4_IRQn);
+	/*Configure GPIO pin : PC4 */
+	GPIO_InitStruct.Pin = GPIO_PIN_4;
+	GPIO_InitStruct.Mode = GPIO_MODE_INPUT;
+	GPIO_InitStruct.Pull = GPIO_PULLUP;
+	HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
 
+	/*Configure GPIO pins : PA8 PA9 */
+	GPIO_InitStruct.Pin = GPIO_PIN_8 | GPIO_PIN_9;
+	GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+	GPIO_InitStruct.Pull = GPIO_NOPULL;
+	GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+	HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 }
 
-void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
+void user_button_debounce_check(void) {
+	missile_button_stats.current_state = HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_4);
+	if (missile_button_stats.current_state
+			!= missile_button_stats.button_state) {
+		// button state is about to be changed, increase counter
+		missile_button_stats.count++;
+		if (missile_button_stats.count >= DEBOUNCE_COUNT) {
+			// the button has not bounced for (DEBOUNCE_COUNT), change state
+			missile_button_stats.button_state =
+					missile_button_stats.current_state;
+			missile_button_stats.count = 0;
+		}
+	} else {
+		// reset counter
+		missile_button_stats.count = 0;
+	}
+}
 
+uint8_t get_user_button_status(void)
+{
+	/* =1 means the button is NOT pressed
+	 * =0 means the button is pressed */
+	return !(missile_button_stats.button_state);
 }

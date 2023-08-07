@@ -7,8 +7,16 @@
 
 #include "stm32f4xx_hal.h"
 #include "error_handler.h"
+#include "space_invaders.h"
 
+/* ADC handle */
 ADC_HandleTypeDef hadc1;
+
+/* to store the 12-bit ADC value */
+extern uint16_t adc_val[1];
+
+/* to update the current user position */
+extern game_objects_t game_entities;
 
 /**
   * @brief ADC1 Initialization Function
@@ -62,5 +70,9 @@ void MX_ADC1_Init(void)
 
 void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
-
+	if(hadc->Instance == ADC1)
+	{
+		/* update the player's position based on the 12- bit ADC value mapped to the X-coordinate [0 - 83] */
+		game_entities.user.x = 66 - (0.016 * adc_val[1]);
+	}
 }

@@ -7,6 +7,7 @@
 
 #include "stm32f4xx_hal.h"
 #include "error_handler.h"
+#include "gpio.h"
 
 TIM_HandleTypeDef htim2;
 
@@ -65,13 +66,10 @@ void MX_TIM2_Init(void)
   */
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
 {
-  /* USER CODE BEGIN Callback 0 */
-
-  /* USER CODE END Callback 0 */
   if (htim->Instance == TIM5) {
     HAL_IncTick();
   }
-  /* USER CODE BEGIN Callback 1 */
 
-  /* USER CODE END Callback 1 */
+  /* checking for user button debounce */
+  user_button_debounce_check();
 }
