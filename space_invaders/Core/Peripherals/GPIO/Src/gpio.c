@@ -9,7 +9,7 @@
 #include "error_handler.h"
 
 /* debounce limit count */
-#define DEBOUNCE_COUNT	5
+#define DEBOUNCE_COUNT	10
 
 typedef struct user_button_status
 {
@@ -19,6 +19,8 @@ typedef struct user_button_status
 } user_button_status_t;
 
 static user_button_status_t missile_button_stats;
+
+extern volatile uint8_t user_missile_flag;
 
 /**
  * @brief GPIO Initialization Function
@@ -60,17 +62,14 @@ void user_button_debounce_check(void) {
 			// the button has not bounced for (DEBOUNCE_COUNT), change state
 			missile_button_stats.button_state =
 					missile_button_stats.current_state;
+			if(missile_button_stats.button_state == 0)
+			{
+				user_missile_flag = 1;
+			}
 			missile_button_stats.count = 0;
 		}
 	} else {
 		// reset counter
 		missile_button_stats.count = 0;
 	}
-}
-
-uint8_t get_user_button_status(void)
-{
-	/* =1 means the button is NOT pressed
-	 * =0 means the button is pressed */
-	return !(missile_button_stats.button_state);
 }

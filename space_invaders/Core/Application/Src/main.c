@@ -63,7 +63,7 @@ int main(void) {
 
 	/* create the primary application task */
 	assert_param(
-			xTaskCreate((pdTASK_CODE)space_invaders_app, "Space Invaders", TASK_STACK_SIZE, 1, xTaskHandle_spaceInvaders) == pdPASS);
+			xTaskCreate((pdTASK_CODE)space_invaders_app, "Space Invaders", TASK_STACK_SIZE, NULL, 1, &xTaskHandle_spaceInvaders) == pdPASS);
 
 	/* start the scheduler */
 	vTaskStartScheduler();

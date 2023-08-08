@@ -10,10 +10,7 @@
 
 void MX_GPIO_Init(void);
 
-/* checking user button accounting for debounce */
+/* checking for user button debouncing */
 void user_button_debounce_check(void);
-
-/* return the current state of the user button */
-uint8_t get_user_button_status(void);
 
 #endif /* PERIPHERALS_GPIO_INC_GPIO_H_ */

@@ -29,13 +29,13 @@
 #define POINTS_PER_KILL			50
 
 // ********** Image persist period **********
-#define PERSIST_PERIOD			3000			// 3 secs
+#define PERSIST_PERIOD			1000			// 1 secs
 
 // ********** Laser generation period of the enemy **********
-#define ENEMY_LASER_GENERATION_PERIOD	1000	// 1 secs
+#define ENEMY_LASER_GENERATION_PERIOD	250		// 0.25 secs
 
 // ********** Laser movement period **********
-#define LASER_MOVEMENT_PERIOD			500		// 0.5 secs
+#define LASER_MOVEMENT_PERIOD			100		// 0.1 secs
 
 // ********** Laser displacement per iteration **********
 #define USER_LASER_DISPLACEMENT			3		// 3 pixels
@@ -43,6 +43,9 @@
 
 // ********** Screen refresh period **********
 #define SCREEN_REFRESH_PERIOD			16		// approximately 60Hz refresh rate
+
+// ********** Task stack size **********
+#define TASK_STACK_SIZE		500
 
 typedef struct sprite_info {
 	uint8_t x;      					// x-coordinate

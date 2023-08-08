@@ -8,6 +8,7 @@
 #include "stm32f4xx_hal.h"
 #include "error_handler.h"
 #include "gpio.h"
+#include "random.h"
 
 TIM_HandleTypeDef htim2;
 
@@ -70,6 +71,9 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
     HAL_IncTick();
   }
 
-  /* checking for user button debounce */
+  /* seed the RNG */
+  Random_Init(uwTick);
+
+  /* preventing button debounce cases */
   user_button_debounce_check();
 }

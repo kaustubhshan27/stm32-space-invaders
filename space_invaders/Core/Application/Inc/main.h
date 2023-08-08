@@ -36,12 +36,15 @@ extern "C" {
 #include "adc.h"
 #include "timer.h"
 #include "nokia5110.h"
+#include "space_invaders.h"
 #include "error_handler.h"
 #include "FreeRTOS.h"
 #include "task.h"
 
 /* Macros ------------------------------------------------------------------*/
-#define TASK_STACK_SIZE		500
+
+/* Function Prototype ------------------------------------------------------------------*/
+void space_invaders_app(void);
 
 #ifdef __cplusplus
 }

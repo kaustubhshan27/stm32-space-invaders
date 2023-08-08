@@ -72,7 +72,7 @@ void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef* hadc)
 {
 	if(hadc->Instance == ADC1)
 	{
-		/* update the player's position based on the 12- bit ADC value mapped to the X-coordinate [0 - 83] */
-		game_entities.user.x = 66 - (0.016 * adc_val[1]);
+		/* update the player's position based on the 12-bit ADC value mapped to the X-coordinate [0 - 83] */
+		game_entities.user.x = 66 - (0.016 * adc_val[0]);
 	}
 }
