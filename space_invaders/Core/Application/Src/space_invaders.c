@@ -188,8 +188,15 @@ SemaphoreHandle_t xSemaphrHandle_user_missile_gen = NULL;
 // global mutex for all tasks
 SemaphoreHandle_t xSemaphrHandle_global_mutex = NULL;
 
+// indicates a user missile to be fired
 volatile uint8_t user_missile_flag = 0;
 
+/**
+ * @brief Initialize the attributes of user and enemy lasers.
+ *
+ * This static function initializes the attributes of user and enemy lasers.
+ * It sets the initial hit statuses, positions, images, and life status for each laser.
+ */
 static void lasers_init(void) {
 	// initializing all user lasers
 	for (uint8_t i = 0; i < USER_MISSILE_MAX; i++) {
@@ -218,6 +225,12 @@ static void lasers_init(void) {
 	}
 }
 
+/**
+ * @brief Initialize the positions and attributes of game entities.
+ *
+ * This static function initializes the positions and attributes of enemies, the player, and bunkers.
+ * It sets the initial positions and images for each entity, as well as their initial life status.
+ */
 static void sprites_pos_init(void) {
 	// enemy initialization
 	for (uint8_t i = 0; i < NUMBER_OF_ENEMIES; i++) {
@@ -240,6 +253,13 @@ static void sprites_pos_init(void) {
 	game_entities.bunker.life = 3;
 }
 
+/**
+ * @brief Draw the game entities and their positions on the Nokia 5110 screen.
+ *
+ * This static function clears the buffer, then fills it with the images of enemies, the player,
+ * bunkers, user lasers, and enemy lasers based on their respective positions. It finally displays
+ * the buffer on the Nokia 5110 screen to provide a visual representation of the game state.
+ */
 static void draw(void) {
 	// clearing the buffer before drawing
 	Nokia5110_ClearBuffer();
@@ -282,6 +302,12 @@ static void draw(void) {
 	Nokia5110_DisplayBuffer();
 }
 
+/**
+ * @brief Display the game start message on the Nokia 5110 screen.
+ *
+ * This static function clears the screen and displays the game title along with a message to begin the game.
+ * It uses the Nokia 5110 screen to provide visual output.
+ */
 static void game_start_msg(void) {
 	Nokia5110_Clear();
 	Nokia5110_SetCursor(1, 1);
@@ -292,6 +318,13 @@ static void game_start_msg(void) {
 	Nokia5110_OutString("Begin Game!");
 }
 
+/**
+ * @brief Display the end game message on the Nokia 5110 screen.
+ *
+ * This function clears the screen and displays either a victory message with the score
+ * or a defeat message depending on the game outcome. It utilizes the Nokia 5110 screen
+ * for visual output.
+ */
 void game_end_msg(void) {
 	Nokia5110_Clear();
 
@@ -314,6 +347,13 @@ void game_end_msg(void) {
 	}
 }
 
+/**
+ * @brief Initialize the game entities and start the game.
+ *
+ * This function initializes the game entities, such as player, enemies, bunkers, and laser arrays.
+ * It clears the game statistics structure and displays the game start message on the screen,
+ * followed by the initial playing position. It then delays to let the messages persist on the display.
+ */
 void game_init(void) {
 	/* initialize the game entities */
 	sprites_pos_init();
@@ -330,6 +370,12 @@ void game_init(void) {
 	draw();
 }
 
+/**
+ * @brief Task function responsible for generating user lasers in the game.
+ *
+ * This task function generates user lasers whenever the semaphore indicates a missile should be fired.
+ * It calculates the appropriate position and direction for the laser and checks for collisions with enemies.
+ */
 void user_laser_generation(void) {
 	while (1) {
 		if (xSemaphoreTake(xSemaphrHandle_user_missile_gen,
@@ -376,6 +422,13 @@ void user_laser_generation(void) {
 	}
 }
 
+/**
+ * @brief Task function responsible for generating enemy lasers in the game.
+ *
+ * This task function generates enemy lasers at a specific interval. It chooses an enemy
+ * based on a random selection and creates enemy lasers to be fired towards the player's
+ * position.
+ */
 void enemy_laser_generation(void) {
 	TickType_t xLastWakeTime = xTaskGetTickCount();
 
@@ -422,6 +475,12 @@ void enemy_laser_generation(void) {
 	}
 }
 
+/**
+ * @brief Task function responsible for managing the movement and collision of lasers in the game.
+ *
+ * This task function handles the movement of both user and enemy lasers, checks for collisions,
+ * and updates the game state accordingly.
+ */
 void laser_movement(void) {
 	TickType_t xLastWakeTime = xTaskGetTickCount();
 
@@ -515,6 +574,12 @@ void laser_movement(void) {
 	}
 }
 
+/**
+ * @brief Task function responsible for periodically drawing an image to the display.
+ *
+ * This task function is used to draw images on the display screen at a specific refresh rate.
+ * The drawing process is performed inside a critical section.
+ */
 void draw_image(void) {
 	TickType_t xLastWakeTime = xTaskGetTickCount();
 
@@ -530,6 +595,12 @@ void draw_image(void) {
 	}
 }
 
+/**
+ * @brief Main function for the Space Invaders game application.
+ *
+ * This function initializes game metrics, creates tasks for various game
+ * functionalities, and manages the game loop.
+ */
 void space_invaders_app(void) {
 	TaskHandle_t xTaskHandle_userLaserGeneration = NULL;
 	TaskHandle_t xTaskHandle_enemyLaserGeneration = NULL;
