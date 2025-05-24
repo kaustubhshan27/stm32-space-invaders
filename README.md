@@ -18,5 +18,4 @@ The user can control the spaceship’s movement using a potentiometer and shoot 
 
 ## 🚀 Demo
 
-https://github.com/kaustubhshan27/stm32-space-invaders/assets/32894621/3ab72196-63dd-47b1-94d7-9ad9249ad748
 
